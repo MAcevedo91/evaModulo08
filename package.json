@@ -1,0 +1,27 @@
+{
+  "name": "evamodulo08",
+  "version": "1.0.0",
+  "description": "Sistema de gestión médica",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./src/main.js"
+  },
+  "keywords": [],
+  "author": "Marcelo Acevedo",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "express-fileupload": "^1.5.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.20.0",
+    "sequelize": "^6.37.8"
+  }
+}
