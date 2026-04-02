@@ -1,5 +1,7 @@
 import { dbConfig } from "../config/db.config.js"
-import { initUser } from "../models/User.model.js"
+import { initUser, User } from "../models/User.model.js"
+import { initPatient } from "../models/Patient.model.js"
+import { initDoctor } from "../models/Doctor.model.js"
 import { Logger } from "../utils/Logger.js"
 
 
@@ -17,10 +19,12 @@ export class DB {
             this.initModel(dbConfig)
 
             this.logger.info('Sincronizando con la Base de datos')
-            await dbConfig.sync()
+            await dbConfig.sync({ alter: true })
             this.logger.info('Sincronización completa')
+            
+            await this.seedData()
         } catch (error) {
-            this.logger.error('No pudimos conectarnos a la base de datos')
+            this.logger.error('No pudimos conectarnos a la base de datos: ' + error.message)
             process.exit(1)
         }
     }
@@ -29,12 +33,25 @@ export class DB {
         try {
             this.logger.info('Inicializando modelos')
 
-            this.logger.debug('Inicializando modelo de User')
             initUser(config)
-            this.logger.debug('Modelo User inicializado con éxito')
+            initPatient(config)
+            initDoctor(config)
+            
+            this.logger.debug('Modelos inicializados con éxito')
         } catch (error) {
-            this.logger.error(`Error al inicalizar el modelo: ${error.message}`);
-            throw new Error('Error al incializar modelos')
+            this.logger.error(`Error al inicializar el modelo: ${error.message}`);
+            throw new Error('Error al inicializar modelos')
+        }
+    }
+    
+    static async seedData() {
+        const admin = await User.findOne({ where: { email: 'admin@clinica.com' }});
+        if (!admin) {
+            await User.create({
+                email: 'admin@clinica.com',
+                password: 'password123'
+            });
+            this.logger.info('Usuario administrador de prueba creado: admin@clinica.com / password123');
         }
     }
 }
